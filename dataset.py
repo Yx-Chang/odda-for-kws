@@ -35,6 +35,7 @@ import soundfile as sf
 import numpy as np
 import tensorflow as tf
 
+import pathlib
 
 MAX_NUM_WAVS_PER_CLASS = 2**27 - 1  # ~134M
 BACKGROUND_NOISE_LABEL = '_background_noise_'
@@ -85,9 +86,38 @@ class AudioProcessor(object):
   def __init__(self, training_parameters, data_processing_parameters):
       
       self.data_directory = training_parameters['data_dir']
+      self.get_dataset_noiseset(training_parameters)
       self.generate_background_noise(training_parameters)
       self.generate_data_dictionary(training_parameters)
       self.data_processing_parameters = data_processing_parameters
+
+  def get_dataset_noiseset(self, training_parameters):
+
+    print('Preparing dataset...')
+
+    dataset_dir = pathlib.Path(training_parameters['data_dir'])
+    if not dataset_dir.exists():
+      tf.keras.utils.get_file(
+          'google_speech_commands_dataset.zip',
+          origin=training_parameters['data_url'],
+          extract=True,
+          cache_dir='.', cache_subdir='GSC')
+      # os.rename('/GSC/google_speech_commands_dataset.zip', training_parameters['data_dir']+'/google_speech_commands_dataset.zip')
+
+    else:
+      print('Google speech command dataset already exists!')
+
+    noiseset_dir = pathlib.Path(training_parameters['noise_dir'])
+    if not noiseset_dir.exists():
+      tf.keras.utils.get_file(
+          'demand_dataset.tar.bz2',
+          origin=training_parameters['noise_url'],
+          extract=True,
+          cache_dir='.', cache_subdir='DEMAND')
+      # os.rename('/DEMAND/demand_dataset.tar.bz2', training_parameters['noise_dir']+'/demand_dataset.tar.bz2')
+    else:
+      print('DEMAND dataset already exists!')
+
 
 
   def generate_data_dictionary(self, training_parameters):
@@ -109,7 +139,7 @@ class AudioProcessor(object):
 
     for wav_path in glob.glob(search_path):
       _ , word = os.path.split(os.path.dirname(wav_path))
-      speaker_id = wav_path.split('/')[8].split('_')[0]  # Hardcoded, should use regex.
+      speaker_id = wav_path.split('/')[2].split('_')[0]  # Hardcoded, should use regex. # TODO: index should be adapted based on the path 
       word = word.lower()
 
       # Ignore background noise, as it has been handled by generate_background_noise()
@@ -194,7 +224,7 @@ class AudioProcessor(object):
       wav_file = torch.Tensor(np.array([sf_loader]))
 
       wav_path = str(wav_path)
-      noise_type = wav_path.split('/')[6] #  TODO: index should be adapted based on the path
+      noise_type = wav_path.split('/')[1] #  TODO: index should be adapted based on the path
 
       if (training_parameters['noise_dataset'] == 'demand'):
         # Last 2 channels of test noises are used for testing

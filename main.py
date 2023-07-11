@@ -65,7 +65,7 @@ training_environment = Train(audio_processor, training_parameters, model, device
 # Removing stored inputs and activations
 remove_txt()
 
-train = False
+train = True
 if train:
   # Train
   start=time.clock_gettime(0)
@@ -80,12 +80,12 @@ if odda:
   environmental_noise = 'TMETRO'
   training_environment.adapt(model, environmental_noise)
 
-# # Accuracy on the training set. 
-# print ("Training acc")
-# acc = training_environment.validate(model, mode='training', batch_size=-1, statistics=False)
+# Accuracy on the training set. 
+print ("Training acc")
+acc = training_environment.validate(model, mode='training', batch_size=-1, statistics=False)
 # Accuracy on the validation set. 
-# print ("Validation acc")
-# acc = training_environment.validate(model, mode='validation', batch_size=-1, statistics=False)
+print ("Validation acc")
+acc = training_environment.validate(model, mode='validation', batch_size=-1, statistics=False)
 # Accuracy on the testing set. 
 print ("Testing acc")
 acc = training_environment.validate(model, mode='testing', batch_size=-1, statistics=False)

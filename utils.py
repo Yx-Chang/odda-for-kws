@@ -124,8 +124,9 @@ def parameter_generation():
     training_parameters = {
     'noise_mode':'odda', # nlkws, nakws, odda
     'noise_dataset':'demand',
-    'data_dir':'path/to/GSC/dataset',
+    'data_dir':'GSC',
     'data_url':'https://storage.googleapis.com/download.tensorflow.org/data/speech_commands_v0.02.tar.gz',
+    'noise_url':'https://dns3public.blob.core.windows.net/dns3archive/DEMAND.tar.bz2',
     'epochs':60,
     'batch_size':128,
     'silence_percentage':10.0,
@@ -137,7 +138,7 @@ def parameter_generation():
     }
 
     if training_parameters['noise_dataset'] == 'demand':
-        training_parameters['noise_dir'] = 'path/to/DEMAND/dataset'
+        training_parameters['noise_dir'] = 'DEMAND'
         training_parameters['noise_test'] = ['DKITCHEN', 'DLIVING', 'DWASHING', 'NFIELD', 'NPARK', \
                                       'NRIVER', 'OHALLWAY', 'OMEETING', 'OOFFICE', 'PCAFETER', \
                                       'PRESTO', 'PSTATION', 'SCAFE', 'SPSQUARE', 'STRAFFIC', \
@@ -147,7 +148,7 @@ def parameter_generation():
                                       'PRESTO', 'PSTATION', 'SCAFE', 'SPSQUARE', 'STRAFFIC', \
                                       'TBUS', 'TCAR']
     else:
-        training_parameters['noise_dir'] = 'path/to/GSC/dataset/_background_noise_'
+        training_parameters['noise_dir'] = 'GSC/_background_noise_'
 
     target_words='yes,no,up,down,left,right,on,off,stop,go,'  # GSCv2 - 12 words
     # Selecting 35 words

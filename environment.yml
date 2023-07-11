@@ -1,4 +1,4 @@
-name: odda
+name: kws_odda
 channels:
   - conda-forge
   - defaults
@@ -106,4 +106,4 @@ dependencies:
     - urllib3==1.26.4
     - werkzeug==1.0.1
     - wrapt==1.12.1
-prefix: path/to/miniconda3/envs/odda
+prefix: /local/user/ycg/anaconda3/envs/kws_odda
